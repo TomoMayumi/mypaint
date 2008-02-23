@@ -23,6 +23,20 @@ typedef struct _Windata{
 Display* dis;                                //Display pointer
 
 
+/**********************************/
+/* プロトタイプ宣言               */
+/* (ファイル外からも使用する関数) */
+/**********************************/
+//unsigned long GetColor( Display* dis, char* color_name )
+
+
+/**************************************/
+/* プロトタイプ宣言                   */
+/* (このファイル内でのみ使用する関数) */
+/**************************************/
+void initSubWindow(Display *dis, Windata windata);
+
+
 unsigned long GetColor( Display* dis, char* color_name )
 {
     Colormap cmap;
@@ -119,8 +133,8 @@ int main( void )
   // 全てのウィンドウをマップ
   XMapWindow( dis, win);
   XMapSubwindows( dis, win);
-  XMapSubwindows( dis, function);
-  XMapSubwindows( dis, canvas);
+  XMapSubwindows( dis, function.win);
+  XMapSubwindows( dis, canvas.win);
   setFuncSubWin();
   
   initColorSelect(dis,win);//カラーセレクトの初期化
@@ -143,7 +157,7 @@ int main( void )
     XNextEvent( dis, &ev );
     
     if(!eventFuncMenu(ev))continue;
-    if(!eventLayerMenu(ev,canvas))continue;
+    if(!eventLayerMenu(ev))continue;
     
     switch(ev.type){
     case ButtonPress:
@@ -154,7 +168,7 @@ int main( void )
       }
       break;
     case Expose:
-      if ( ev.xany.window == function ){
+      if ( ev.xany.window == function.win ){
 	remapFuncMenu();
       }
       break;
@@ -177,15 +191,19 @@ int main( void )
 
 void initSubWindow(Display *dis, Windata windata){
   unsigned int dummy;
+
+  unsigned long background; //メインウィンドウの背景色
+
+  background = WhitePixel( dis, 0);
   
   //ウィンドウのサイズを取得
-  XGetGeometry( dis, windata.*main, (Window *)&dummy, (int *)&dummy, (int *)&dummy,
+  XGetGeometry( dis, *(windata.main), (Window *)&dummy, (int *)&dummy, (int *)&dummy,
 		&(windata.width), &(windata.height), &dummy, &dummy);
   
   windata.visible=1;
   
-  XResizeWindow(dis,windata.main,windata.width,windata.height+TITLEBAR_HEIGHT);
-  XMoveWindow(dis,windata.main,0,TITLEBAR_HEIGHT);
+  XResizeWindow(dis,*(windata.main),windata.width,windata.height+TITLEBAR_HEIGHT);
+  XMoveWindow(dis,*(windata.main),0,TITLEBAR_HEIGHT);
   
   windata.titlebar = XCreateSimpleWindow( dis, windata.win,
 					  0, 0,

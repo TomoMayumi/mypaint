@@ -12,7 +12,6 @@
 /* (ファイル外からも使用する関数) */
 /**********************************/
 //void initLayer(Display *disp,Window win,Window canvas);
-//int eventLayerMenu(XEvent ev,Window canvas);
 //void remapCanvas();
 //void save_png(Window canvas);
 
@@ -22,11 +21,12 @@
 /**************************************/
 
 
+int eventLayerMenu(XEvent ev,Window canvas);
 void remapLayerMenu();
 void addLayer(Window canvas);
 void swapLayer(int num1,int num2);
-void deleteLayer(int num);
-void changeLayerName(int num);
+void deleteLayer(Layer *layer);
+void changeLayerName(Layer *layer);
 
 /******************/
 /* 大域変数(外部) */
@@ -34,6 +34,7 @@ void changeLayerName(int num);
 
 extern Display *dis;                       //mainから参照
 extern Layer *layerlist;                   //canvas.cから参照
+extern static int layer_num;               //canvas.cから参照 レイヤーの使用数
 
 /************/
 /* 大域変数 */
@@ -103,7 +104,7 @@ Window* initLayer(Window root){
     XSetWindowBackground( dis, selected_layer->item.name, SELECTED_COLOR);
   }
 
-  return(layer_menu);
+  return(&layer_menu);
 
 }
 
@@ -155,7 +156,7 @@ int eventLayerMenu(XEvent ev,Window canvas){
 	  return(0);
 	}
 	// レイヤーの書き込み設定ボタン
-	if ( ev.xany.window == layer->item.writeable ){
+	if ( ev.xany.window == layer->item.writable ){
 	  if(layer->writable==0){//書き込み可能にする
 	    layer->writable=1;
 	    layer->visible=1;
@@ -179,8 +180,8 @@ int eventLayerMenu(XEvent ev,Window canvas){
       //レイヤー削除ボタン
       if( ev.xany.window == delete_layer ){
 	deleteLayer(selected_layer);
-	XSetWindowBackground( dis, layer_namew[selected_layer], SELECTED_COLOR);
-	XClearWindow(dis,layer_namew[selected_layer]);
+	XSetWindowBackground( dis, layer->item.name, SELECTED_COLOR);
+	XClearWindow(dis,layer->item.name);
 	remapLayerMenu();
 	return(0);
       }
@@ -552,7 +553,7 @@ void swapLayer(int num1,int num2){
 /* num:削除するレイヤー番号 */
 /****************************/
 
-void deleteLayer(int num){
+void deleteLayer(Layer *layer){
   int i;
   //レイヤーが一つしかない時は動作しない
   if(layer_num==1)return;
@@ -582,7 +583,7 @@ void deleteLayer(int num){
 /* num:変更するレイヤー番号 */
 /****************************/
 
-void changeLayerName(int num){
+void changeLayerName(Layer *layer){
   GC gc;
   XEvent ev;    //イベント取り込み変数
   KeySym key;
@@ -590,12 +591,12 @@ void changeLayerName(int num){
   int exit_flag=0;
   
   //通常GC取得＆標準設定
-  gc = XCreateGC( dis, layer[num], 0, 0 );
+  gc = XCreateGC( dis, *layer, 0, 0 );
   XSetForeground( dis, gc, GetColor( dis, "black")  );
   //名前ウィンドウの背景を白に
-  XSetWindowBackground( dis, layer_namew[num], 0xffffff);
-  XClearWindow(dis,layer_namew[num]);
-  XDrawString( dis, layer_namew[num], gc, 2, 12, layer_name[num], strlen(layer_name[num]));
+  XSetWindowBackground( dis, layer->item.name, 0xffffff);
+  XClearWindow(dis,layer->item.name);
+  XDrawString( dis, layer->item.name, gc, 2, 12, layer->name, strlen(layer->name));
 
   //文字入力受付
   while(exit_flag==0){
@@ -603,7 +604,7 @@ void changeLayerName(int num){
     switch(ev.type){
     case ButtonPress:
       //違うウィンドウがクリックされたら変更終了
-      if(ev.xany.window!=layer_namew[num]){
+      if(ev.xany.window!=layer->item.name){
 	exit_flag=1;
       }
       break;
@@ -612,18 +613,18 @@ void changeLayerName(int num){
       //BS文字の判定
       if(strbuf[0]==8){
 	//文字列の長さが0以上なら一文字削除
-	if(strlen(layer_name[num])) layer_name[num][strlen(layer_name[num])-1]='\0';
+	if(strlen(layer->name)) layer->name[strlen(layer->name)-1]='\0';
       }else{
-	if( (strlen(layer_name[num]) + strlen(strbuf)) < MAX_NAME){
-	  printf("%d %d %d %s in changeLayerName\n",strlen(layer_name[num]),strlen(strbuf),MAX_NAME,layer_name[num]);
+	if( (strlen(layer->name) + strlen(strbuf)) < MAX_NAME){
+	  printf("%d %d %d %s in changeLayerName\n",strlen(layer->name),strlen(strbuf),MAX_NAME,layer->name);
 	  //文字列の連結
 	  char strpos[MAX_NAME];
-	  strcpy(strpos,layer_name[num]);
-	  sprintf(layer_name[num],"%s%s",strpos,strbuf);
+	  strcpy(strpos,layer->name);
+	  sprintf(layer->name,"%s%s",strpos,strbuf);
 	}
       }
-      XClearWindow(dis,layer_namew[num]);
-      XDrawString( dis, layer_namew[num], gc, 2, 12, layer_name[num], strlen(layer_name[num]));
+      XClearWindow(dis,layer->item.name);
+      XDrawString( dis, layer->item.name, gc, 2, 12, layer->name, strlen(layer->name));
       XFlush( dis );
       break;
     case Expose:
@@ -635,9 +636,9 @@ void changeLayerName(int num){
   }
 
   //名前ウィンドウの背景を元に戻す
-  XSetWindowBackground( dis, layer_namew[num], SELECTED_COLOR);
-  XClearWindow(dis,layer_namew[num]);
-  XDrawString( dis, layer_namew[num], gc, 2, 12, layer_name[num], strlen(layer_name[num]));
+  XSetWindowBackground( dis, layer->item.name, SELECTED_COLOR);
+  XClearWindow(dis,layer->item.name);
+  XDrawString( dis, layer->item.name, gc, 2, 12, layer->name, strlen(layer->name));
 
   //使用したGCの解放
   XFreeGC(dis,gc);

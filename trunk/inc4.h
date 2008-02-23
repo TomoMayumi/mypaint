@@ -51,7 +51,7 @@ typedef struct _Layer{
 
 /* canvas.c の関数 */
 Window* initCanvas(Window root);
-int eventLayerMenu(XEvent ev);
+int eventCanvas(XEvent ev);
 void remapCanvas();
 void save_png();
 
@@ -60,6 +60,8 @@ Layer* getSelectedLayer();
 
 /* function.c の関数 */
 void execFunc(XEvent ev,Layer *layer);
+Window* initFuncMenu(Display *disp,Window root);
+
 
 
 /* history.c の関数 */
@@ -83,7 +85,7 @@ void initColorSelect(Display *dis,Window main);
 unsigned long callColorSelect( Display *dis, unsigned long oldcolor,Window canvas);
 
 /* func.c の関数 */
-void initFuncMenu(Display *disp,Window func,Window canv);
+//void initFuncMenu(Display *disp,Window func,Window canv);
 void setFuncSubWin();
 void remapFuncMenu();
 int eventFuncMenu(XEvent ev);

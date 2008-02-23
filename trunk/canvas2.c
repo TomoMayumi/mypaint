@@ -17,7 +17,7 @@
 /* (ファイル外からも使用する関数) */
 /**********************************/
 //Window* initCanvas(Display *disp,Window root);
-//int eventLayerMenu(XEvent ev);
+//int eventCanvas(XEvent ev);
 //void remapCanvas();
 //void save_png();
 
