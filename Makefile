@@ -26,3 +26,6 @@ clean:
 
 c++:
 	g++ $(LDFLAGS) -o $(TARGET) $(TARGET).cc $(LIBS)
+
+TAGS:  $(OBJS)
+	etags *.[ch]
