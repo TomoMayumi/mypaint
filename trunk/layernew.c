@@ -21,12 +21,12 @@
 /**************************************/
 
 
-int eventLayerMenu(XEvent ev,Window canvas);
-void remapLayerMenu();
-void addLayer(Window canvas);
-void swapLayer(int num1,int num2);
-void deleteLayer(Layer *layer);
-void changeLayerName(Layer *layer);
+static int eventLayerMenu(XEvent ev,Window canvas);
+static void remapLayerMenu();
+static void addLayer(Window canvas);
+static void swapLayer(Layer *layer);
+static void deleteLayer(Layer *layer);
+static void changeLayerName(Layer *layer);
 
 /******************/
 /* 大域変数(外部) */
@@ -122,7 +122,7 @@ int eventLayerMenu(XEvent ev,Window canvas){
   case ButtonPress:
     //左クリックの時
     if( ev.xbutton.button == 1 ){
-      for(i=0;i<layer_num;i++){	  
+      for(layer=layerlist;layer->next!=NULL;layer=layer->next){	  
 	// レイヤーの名前部分
 	if ( ev.xany.window == layer->item.name ){
 	  if(selected_layer == layer){
@@ -187,17 +187,21 @@ int eventLayerMenu(XEvent ev,Window canvas){
       }
       //レイヤー入れ替えボタン
       if( ev.xany.window == up_layer ){
-	if(selected_layer>0){
+	if(selected_layer!=layerlist){
+	  for(layer=layerlist;
+	      (layer->next!=selected_layer)&&(layer->next!=NULL);
+	      layer=layer->next){
+	    
+	  }
+	  swapLayer(layer);
 
-	  swapLayer(selected_layer,selected_layer-1);
+	  //XSetWindowBackground( dis, layer_namew[selected_layer], UNSELECTED_COLOR1);
+	  //XClearWindow(dis,layer_namew[selected_layer]);
 
-	  XSetWindowBackground( dis, layer_namew[selected_layer], UNSELECTED_COLOR1);
-	  XClearWindow(dis,layer_namew[selected_layer]);
+	  //selected_layer--;
 
-	  selected_layer--;
-
-	  XSetWindowBackground( dis, layer_namew[selected_layer], SELECTED_COLOR);
-	  XClearWindow(dis,layer_namew[selected_layer]);
+	  //XSetWindowBackground( dis, layer_namew[selected_layer], SELECTED_COLOR);
+	  //XClearWindow(dis,layer_namew[selected_layer]);
 	  remapLayerMenu();
 	}
 	return(0);
@@ -482,7 +486,17 @@ void save_png(Window canvas){
 /* num1,num2:入れ替えるレイヤー番号 */
 /************************************/
 
-void swapLayer(int num1,int num2){
+void swapLayer(Layer *layer){
+
+  Layer *tmp;
+
+  for(tmp=layerlist;tmp->next!=layer;tmp=tmp->next);
+
+  tmp->next=layer->next;
+  layer->next=layer->next->next;
+  tmp->next->next=layer;
+
+
 
   Pixmap tmplayer;
   Pixmap tmpmask;

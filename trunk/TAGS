@@ -1,0 +1,323 @@
+
+canvas.c,1226
+#define SELECTED_COLOR SELECTED_COLOR4,79
+#define UNSELECTED_COLOR1 UNSELECTED_COLOR15,133
+#define UNSELECTED_COLOR2 UNSELECTED_COLOR26,190
+#define BORDERLINE_COLOR BORDERLINE_COLOR7,247
+#define OVERED_BORDERLINE_COLOR OVERED_BORDERLINE_COLOR8,303
+#define MAX_NAME MAX_NAME10,360
+typedef struct _Layer{_Layer12,407
+  Window win;win13,430
+  Pixmap mask;mask14,444
+  Pixmap exact;exact15,459
+  int visible;visible16,475
+  int writable;writable17,490
+}Layer;Layer19,528
+Display *dis;dis47,1205
+Window canvas;canvas49,1220
+Layer layer[MAX_LAYER];            //レイヤーlayer50,1235
+int layer_num;                     //レイヤーの使用数layer_num51,1281
+int stack[MAX_LAYER];           //レイヤーの上下順stack52,1335
+Window* initCanvas(Display *disp,Window root){initCanvas59,1536
+int eventCanvas(XEvent ev){eventCanvas88,2145
+void remapCanvas(){remapCanvas144,3371
+void addLayer(Window canvas){addLayer159,3713
+void save_png(){save_png227,5843
+void swapLayer(int num1,int num2){swapLayer272,7286
+void upLayer(int num){upLayer300,7823
+void downLayer(int num){downLayer313,8117
+void deleteLayer(int num){deleteLayer328,8410
+void changeLayerName(int num){changeLayerName358,9160
+
+canvas2.c,817
+#define SELECTED_COLOR SELECTED_COLOR9,120
+#define UNSELECTED_COLOR1 UNSELECTED_COLOR110,174
+#define UNSELECTED_COLOR2 UNSELECTED_COLOR211,231
+#define BORDERLINE_COLOR BORDERLINE_COLOR12,288
+#define OVERED_BORDERLINE_COLOR OVERED_BORDERLINE_COLOR13,344
+Layer *layerlist=NULL;            //レイヤーリスト(layer.cからも参照)layerlist44,1096
+static Window canvas;canvas45,1166
+static int layer_num;             //レイヤーの使用数layer_num46,1188
+Window* initCanvas(Window root){initCanvas53,1391
+int eventCanvas(XEvent ev){eventCanvas80,1939
+void remapCanvas(){remapCanvas142,3297
+void addLayer(){addLayer159,3700
+void save_png(){save_png231,5664
+void upLayer(Layer *layer){upLayer275,7081
+void downLayer(Layer *layer){downLayer304,7706
+void deleteLayer(Layer *layer){deleteLayer332,8277
+
+colorselect.c,1112
+#define WIN_WIDTH WIN_WIDTH4,46
+#define WIN_HEIGHT WIN_HEIGHT5,69
+#define TEXT_WIDTH TEXT_WIDTH6,92
+#define TEXT_HEIGHT TEXT_HEIGHT7,115
+#define BUTTON_WIDTH BUTTON_WIDTH8,138
+#define BUTTON_HEIGHT BUTTON_HEIGHT9,162
+#define BAR_WIDTH BAR_WIDTH10,187
+#define BAR_HEIGHT BAR_HEIGHT12,246
+#define COLOR_WIDTH COLOR_WIDTH13,268
+#define COLOR_HEIGHT COLOR_HEIGHT14,291
+#define WHITE_COLOR WHITE_COLOR16,316
+#define GRAY_COLOR GRAY_COLOR17,345
+#define RED_COLOR RED_COLOR18,373
+#define GREEN_COLOR GREEN_COLOR19,400
+#define BLUE_COLOR BLUE_COLOR20,429
+Window cwin;cwin22,458
+Window ok,cancel;ok23,471
+Window ok,cancel;cancel23,471
+Window oldcolor_win;oldcolor_win24,489
+Window newcolor_win;newcolor_win25,510
+Window bar_area[3];bar_area26,531
+Window text[3];text27,551
+Window bar[3];bar28,567
+Window rgb[3];rgb29,582
+GC black_gc;black_gc31,598
+void initColorSelect(Display *dis,Window main){initColorSelect34,613
+void remap(Display *dis,int rgb_color[]){remap113,3101
+unsigned long callColorSelect( Display *dis, unsigned long oldcolor){callColorSelect130,3591
+
+function.c,3027
+#define MAX_COLOR MAX_COLOR4,79
+#define MAX_PEN MAX_PEN5,111
+#define MAX_FUNC MAX_FUNC6,148
+#define MAX_FUNC_SUB MAX_FUNC_SUB7,180
+#define MAX_TYPE MAX_TYPE8,220
+#define SELECTED_COLOR SELECTED_COLOR10,255
+#define UNSELECTED_COLOR1 UNSELECTED_COLOR111,309
+#define UNSELECTED_COLOR2 UNSELECTED_COLOR212,366
+#define BORDERLINE_COLOR BORDERLINE_COLOR13,423
+#define OVERED_BORDERLINE_COLOR OVERED_BORDERLINE_COLOR14,479
+Display *dis;dis24,1021
+Window function;function26,1036
+Window func_win[MAX_FUNC];                   //機能選択のWindow  IDfunc_win27,1053
+Window func_sub_win[MAX_FUNC];               //補助機能のWindow  IDfunc_sub_win28,1121
+Window func_type_win[MAX_FUNC][MAX_FUNC_SUB];               //補助機能のWindow  IDfunc_type_win29,1189
+Window pen_win[MAX_PEN];                     //太さ選択のWindow  IDpen_win30,1272
+Window line_type_win[MAX_TYPE];              //線種選択のWindow  IDline_type_win31,1340
+Window debug_win;                            //デバッグ用のWindow  IDdebug_win32,1408
+GC func_gc;                                       //グラフィックコンテキスト IDfunc_gc34,1479
+GC mask_gc;                                       //グラフィックコンテキスト IDmask_gc35,1559
+GC copy_gc;                                  //コピー用グラフィックコンテキスト IDcopy_gc36,1639
+Pixmap copy_pix[2];                          //コピー用ピクスマップcopy_pix37,1722
+Pixmap copymask_pix;                          //コピーマスク用ピクスマップcopymask_pix38,1790
+int button_size=20;    //サブウィンドウのサイズbutton_size40,1866
+int state=FREEHAND; // 今何の機能が選択されているか。state42,1915
+int sub_state=0; // 今何の補助機能が選択されているか。sub_state43,1969
+unsigned long current_color=0; // 今何色かcurrent_color45,2025
+unsigned long current_pen=2; // 今太さはいくつかcurrent_pen46,2068
+unsigned long current_line=LineSolid; // 線の種類current_line47,2117
+unsigned long current_cap=CapRound; // 線の終端current_cap48,2167
+unsigned long current_join=JoinMiter; // 連続直線のつながりcurrent_join49,2215
+Window* initFuncMenu(Display *disp,Window root){initFuncMenu51,2276
+void setFuncSubWin(){setFuncSubWin176,6277
+void remapFuncMenu(){remapFuncMenu190,6516
+int eventFuncMenu(XEvent ev){eventFuncMenu297,10102
+void execFunc(XEvent ev,Layer *layer){execFunc543,17802
+void freeHand(XEvent ev,Layer *layer){freeHand570,18277
+void line(XEvent ev,Window *layer_expose,Window *layer,Window *mask,int num){line606,19381
+void square(XEvent ev,Window *layer_expose,Window *layer,Window *mask,int num){square641,20626
+void circle(XEvent ev,Window *layer_expose,Window *layer,Window *mask,int num){circle697,22441
+void fill(XEvent ev,Window *layer_expose,Window *layer,Window *mask,int num){fill762,24311
+void fillCheck(int x,int y,unsigned long pixel,XImage *ximage[],XImage *xmaskimage){fillCheck810,26093
+#define Pixel(Pixel811,26178
+#define SetPixel(SetPixel812,26228
+#define SetMask(SetMask813,26285
+#define MAX_BUFF MAX_BUFF814,26340
+
+historynew.c,1606
+#define MAX_HISTORY MAX_HISTORY6,112
+Pixmap history_pix[MAX_HISTORY];           //履歴用ピックスマップIDhistory_pix29,720
+Pixmap history_mask_pix[MAX_HISTORY];      //履歴用マスクピックスマップIDhistory_mask_pix30,788
+Pixmap last_pix[MAX_LAYER];           //最終履歴用ピックスマップIDlast_pix31,862
+Pixmap last_mask_pix[MAX_LAYER];      //最終履歴用マスクピックスマップIDlast_mask_pix32,929
+int history_num[MAX_HISTORY];              //履歴用レイヤー番号history_num33,1002
+GC hcopy_gc;                        //コピー用グラフィックコンテキスト IDhcopy_gc34,1066
+GC hmask_gc;                        //マスク用グラフィックコンテキスト IDhmask_gc35,1140
+int bottom,top,next;bottom38,1216
+int bottom,top,next;top38,1216
+int bottom,top,next;next38,1216
+int width,height;width39,1237
+int width,height;height39,1237
+Display *dis;dis40,1255
+Window win;win41,1269
+void initHistory(Display *display, Window window, int canvas_width, int canvas_height){initHistory43,1282
+void addHistory(Window *layer,Pixmap *mask,int num){addHistory85,2844
+int backHistory(Window *layer_expose,Window *layer,Pixmap *mask){backHistory106,3528
+void forwardHistory(Window *layer_expose,Window *layer,Pixmap *mask){forwardHistory129,4312
+void remapLayerLast(Window *layer_expose,Window *layer,Pixmap *mask,int num){remapLayerLast138,4518
+void remapLayer(Window *layer_expose,Window *layer,Pixmap *mask,int num){remapLayer153,5054
+void view(){view169,5719
+void save(){save180,6115
+void swapHistory(int num1,int num2){swapHistory207,7084
+void deleteHistory(int num){deleteHistory240,8306
+
+inc4.h,1141
+#define FREEHAND FREEHAND4,46
+#define LINE LINE5,65
+#define SQUARE SQUARE6,80
+#define CIRCLE CIRCLE7,97
+#define FILL FILL8,114
+#define CHANGECOLOR CHANGECOLOR9,129
+#define CHANGECOLORPEN CHANGECOLORPEN10,152
+#define CHANGEPEN CHANGEPEN11,178
+#define FUNC_WIDTH FUNC_WIDTH13,200
+#define CANV_WIDTH CANV_WIDTH14,251
+#define LAYER_WIDTH LAYER_WIDTH15,301
+#define MAIN_WIDTH MAIN_WIDTH16,354
+#define MAIN_HEIGHT MAIN_HEIGHT17,410
+#define FUNC_HEIGHT FUNC_HEIGHT18,434
+#define CANV_HEIGHT CANV_HEIGHT19,466
+#define LAYER_HEIGHT LAYER_HEIGHT20,498
+#define MAX_NAME MAX_NAME22,532
+#define MAX_LAYER MAX_LAYER24,579
+typedef struct _LayerItem{_LayerItem29,694
+  Window win;win30,721
+  Window name;name31,735
+  Window visible;visible32,750
+  Window writable;writable33,768
+} LayerItem;LayerItem34,787
+typedef struct _Layer{_Layer36,801
+  Window win;win37,824
+  Pixmap mask;mask38,838
+  Pixmap exact;exact39,853
+  int visible;visible40,869
+  int writable;writable41,884
+  char name[MAX_NAME];name42,900
+  LayerItem item;item43,923
+  struct _Layer *next;next44,941
+} Layer;Layer45,964
+
+layernew.c,1317
+#define SELECTED_COLOR SELECTED_COLOR4,79
+#define UNSELECTED_COLOR1 UNSELECTED_COLOR15,133
+#define UNSELECTED_COLOR2 UNSELECTED_COLOR26,190
+#define BORDERLINE_COLOR BORDERLINE_COLOR7,247
+#define OVERED_BORDERLINE_COLOR OVERED_BORDERLINE_COLOR8,303
+extern static int layer_num;               //canvas.cから参照 レイヤーの使用数layer_num37,1210
+static Window layer_menu;                  //レイヤー管理用メニューウィンドウlayer_menu43,1336
+static Window add_layer;                   //レイヤー追加ボタンadd_layer45,1415
+static Window delete_layer;                //レイヤー削除ボタンdelete_layer46,1479
+static Window up_layer;                    //レイヤー入れ替えボタンup_layer47,1543
+static Window down_layer;                  //レイヤー入れ替えボタン２down_layer48,1611
+static Layer *selected_layer;              //現在選択されているレイヤーselected_layer50,1682
+Window* initLayer(Window root){initLayer57,1856
+int eventLayerMenu(XEvent ev,Window canvas){eventLayerMenu116,3526
+void remapLayerMenu(){remapLayerMenu251,6910
+void addLayer(Window canvas){addLayer312,9201
+void save_png(Window canvas){save_png444,14102
+void swapLayer(Layer *layer){swapLayer489,15558
+void deleteLayer(Layer *layer){deleteLayer570,18125
+void changeLayerName(Layer *layer){changeLayerName600,18880
+
+menu.c,2420
+#define MENU_HEIGHT MENU_HEIGHT6,216
+#define MAX_SUBMENU MAX_SUBMENU7,264
+typedef struct mainmenu{mainmenu9,313
+  Window win; /* アイテムウィンドウ */win10,338
+  int num_item; /* サブメニュー内のアイテム数 */num_item11,377
+  int width,height; /* アイテムの幅、高さ */width12,426
+  int width,height; /* アイテムの幅、高さ */height12,426
+  int next_x; /* 次に追加するアイテムの位置 */next_x13,471
+  mainMenuItem *item; /* アイテム、メニューのリスト */item14,518
+}mainMenu;mainMenu15,573
+typedef struct mainmenuitem{mainmenuitem17,585
+  Window win; /* アイテムウィンドウ */win18,614
+  char *text;  /* 表示する文字列 */text19,653
+  int width,height; /* アイテムの幅、高さ */width20,689
+  int width,height; /* アイテムの幅、高さ */height20,689
+  int x,y; /* アイテムのx座標、y座標 */x21,734
+  int x,y; /* アイテムのx座標、y座標 */y21,734
+  subMenu *sub; /* サブメニュー */sub22,774
+  struct mainmenuitem *next; /* 続くアイテム */next23,809
+}mainMenuItem;mainMenuItem24,857
+typedef struct submenu{submenu26,873
+  Window win; /* サブメニューウィンドウ */win27,897
+  int num_item; /* サブメニュー内のアイテム数 */num_item28,940
+  int width,height; /* サブメニューの幅、高さ */width29,989
+  int width,height; /* サブメニューの幅、高さ */height29,989
+  subMenuItem *item; /* アイテム、メニューのリスト */item30,1038
+}subMenu;subMenu31,1092
+typedef struct submenuitem{submenuitem33,1103
+  Window win; /* アイテムウィンドウ */win34,1131
+  char *text;  /* 表示する文字列 */text35,1170
+  int width,height; /* アイテムの幅、高さ */width36,1206
+  int width,height; /* アイテムの幅、高さ */height36,1206
+  subMenu *sub; /* サブメニュー */sub37,1251
+  struct submenuitem *next; /* 続くアイテム */next38,1286
+}subMenuItem;subMenuItem39,1333
+mainMenu mainMenu; /* メインメニューウィンドウ */mainMenu47,1549
+int main_width,main_height;  /* メインウィンドウの幅、高さ */main_width50,1601
+int main_width,main_height;  /* メインウィンドウの幅、高さ */main_height50,1601
+Display *dis;  /* Xとの接続 */dis51,1663
+Window main_win; /* メインウィンドウ */main_win52,1694
+void initMenu(Display *disp, Window main_window, int main_w, int main_h){initMenu58,1934
+void addMainMenuItem(mainMenu *parent,char *text){addMainMenuItem81,2607
+void setSubMenu(mainMenuItem *parent){setSubMenu110,3443
+void addSubMenuItem(subMenu *parent,char *text){addSubMenuItem129,3966
+
+menu2.c,2465
+#define MENU_HEIGHT MENU_HEIGHT6,216
+#define ITEM_HEIGHT ITEM_HEIGHT7,264
+#define MAX_SUBMENU MAX_SUBMENU8,322
+typedef struct mainmenu{mainmenu10,371
+  Window win; /* アイテムウィンドウ */win11,396
+  int num_item; /* サブメニュー内のアイテム数 */num_item12,435
+  int count; /* 設置済みのアイテム数 */count13,484
+  int width,height; /* アイテムの幅、高さ */width14,524
+  int width,height; /* アイテムの幅、高さ */height14,524
+  int next_x; /* 次に追加するアイテムの位置 */next_x15,569
+  mainMenuItem *item; /* アイテム、メニューのリスト */item16,616
+}mainMenu;mainMenu17,671
+typedef struct mainmenuitem{mainmenuitem19,683
+  Window win; /* アイテムウィンドウ */win20,712
+  char *text;  /* 表示する文字列 */text21,751
+  int width,height; /* アイテムの幅、高さ */width22,787
+  int width,height; /* アイテムの幅、高さ */height22,787
+  int x,y; /* アイテムのx座標、y座標 */x23,832
+  int x,y; /* アイテムのx座標、y座標 */y23,832
+  subMenu *sub; /* サブメニュー */sub24,872
+}mainMenuItem;mainMenuItem25,907
+typedef struct submenu{submenu27,923
+  Window win; /* サブメニューウィンドウ */win28,947
+  int num_item; /* サブメニュー内のアイテム数 */num_item29,990
+  int count; /* 設置済みのアイテム数 */count30,1039
+  int width,height; /* サブメニューの幅、高さ */width31,1079
+  int width,height; /* サブメニューの幅、高さ */height31,1079
+  subMenuItem *item; /* アイテム、メニューのリスト */item32,1128
+}subMenu;subMenu33,1182
+typedef struct submenuitem{submenuitem35,1193
+  Window win; /* アイテムウィンドウ */win36,1221
+  char *text;  /* 表示する文字列 */text37,1260
+  int width,height; /* アイテムの幅、高さ */width38,1296
+  int width,height; /* アイテムの幅、高さ */height38,1296
+  subMenu *sub; /* サブメニュー */sub39,1341
+}subMenuItem;subMenuItem40,1376
+mainMenu mainMenu; /* メインメニューウィンドウ */mainMenu48,1592
+int main_width,main_height;  /* メインウィンドウの幅、高さ */main_width51,1644
+int main_width,main_height;  /* メインウィンドウの幅、高さ */main_height51,1644
+Display *dis;  /* Xとの接続 */dis52,1706
+Window main_win; /* メインウィンドウ */main_win53,1737
+void initMenu(Display *disp, Window main_window, int main_w, int main_h,int num){initMenu61,2016
+void setMainMenuItem(mainMenu *parent,char *text){setMainMenuItem87,2781
+void setSubMenu(mainMenuItem *parent,int num){setSubMenu112,3459
+void addSubMenuItem(subMenu *parent,char *text){addSubMenuItem136,4081
+
+paintmain.c,554
+#define TITLEBAR_HEIGHT TITLEBAR_HEIGHT6,83
+typedef struct _Windata{_Windata11,203
+  Window win;win12,228
+  Window titlebar;titlebar13,242
+  Window *main;main14,261
+  unsigned int width;width15,277
+  unsigned int height;height16,299
+  int visible;visible17,322
+} Windata;Windata18,337
+Display* dis;                                //Display pointerdis23,442
+unsigned long GetColor( Display* dis, char* color_name )GetColor40,933
+int main( void )main50,1193
+void initSubWindow(Display *dis, Windata windata){initSubWindow192,4684
+
+png5.c,192
+void write_png(char *file_name, unsigned char **image, int width, int height)write_png3,17
+void write_row_callback(png_structp png_ptr, png_uint_32 row, int pass)write_row_callback74,2051
