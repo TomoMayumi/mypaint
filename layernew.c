@@ -207,16 +207,16 @@ int eventLayerMenu(XEvent ev,Window canvas){
 	return(0);
       }
       if( ev.xany.window == down_layer ){
-	if(selected_layer<layer_num-1){
-	  swapLayer(selected_layer,selected_layer+1);
+	if(selected_layer->next!=NULL){
+	  swapLayer(selected_layer);
 
-	  XSetWindowBackground( dis, layer_namew[selected_layer], UNSELECTED_COLOR1);
-	  XClearWindow(dis,layer_namew[selected_layer]);
+	  //XSetWindowBackground( dis, layer_namew[selected_layer], UNSELECTED_COLOR1);
+	  //XClearWindow(dis,layer_namew[selected_layer]);
 
-	  selected_layer++;
+	  //selected_layer++;
 
-	  XSetWindowBackground( dis, layer_namew[selected_layer], SELECTED_COLOR);
-	  XClearWindow(dis,layer_namew[selected_layer]);
+	  //XSetWindowBackground( dis, layer_namew[selected_layer], SELECTED_COLOR);
+	  //XClearWindow(dis,layer_namew[selected_layer]);
 	  remapLayerMenu();
 	}
 	return(0);
