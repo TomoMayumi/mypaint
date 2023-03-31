@@ -1,4 +1,5 @@
 #include<png.h>
+#include<zlib.h>
 
 void write_png(char *file_name, unsigned char **image, int width, int height)
 {
@@ -19,7 +20,7 @@ void write_png(char *file_name, unsigned char **image, int width, int height)
     fclose(fp);
     return;
   }
-  if (setjmp(png_ptr->jmpbuf)) {
+  if (setjmp(png_jmpbuf(png_ptr))) {
     png_destroy_write_struct(&png_ptr,  &info_ptr);
     fclose(fp);
     return;
@@ -73,6 +74,6 @@ void write_png(char *file_name, unsigned char **image, int width, int height)
 
 void write_row_callback(png_structp png_ptr, png_uint_32 row, int pass)
 {
-  printf("\r%3d%% saved", (row * 100) / png_ptr->height);
-  if(((row * 100) / png_ptr->height)==100)printf("\n");
+  //printf("\r%3d%% saved", (row * 100) / png_ptr->height);
+  //if(((row * 100) / png_ptr->height)==100)printf("\n");
 }
