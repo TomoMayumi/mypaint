@@ -39,6 +39,7 @@ int eventFuncMenu(XEvent ev);
 void execFunc(XEvent ev,Window *layer_expose,Window *layer,Window *mask,int num);
 
 /* history.c ¤Î´Ø¿ô */
+void initHistory(Display *display, Window window, int canvas_width, int canvas_height);
 void addHistory(Window *layer,Pixmap *mask,int num);
 int backHistory(Window *layer_expose,Window *layer,Pixmap *mask);
 void view();

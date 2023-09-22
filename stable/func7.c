@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include "inc3.h"
 #include <X11/extensions/shape.h>  /* Shape Extension    */
 
@@ -21,7 +23,7 @@ void fill(XEvent ev,Window *layer_expose,Window *layer,Window *mask,int num);
 
 void fillCheck(int x,int y,unsigned long pixel,XImage *ximage[],XImage *xmaskimage);
 
-Display *dis;
+static Display *dis;
 Window canvas;
 
 Window color_win[MAX_COLOR];                 //¿§ÁªÂò¤ÎWindow  ID
@@ -522,8 +524,8 @@ int eventFuncMenu(XEvent ev){
     if ( ev.xany.window == debug_win ){ 
       //printf("color=%d size=%d\n",current_color,current_pen);
       for(i=0;i<MAX_COLOR;i++)
-	printf("%s %x\n",color_name[i],GetColor( dis, color_name[i]));
-      printf("%x\n",GetColor(dis,"yellow")>>8&0xff);
+	printf("%s %lx\n",color_name[i],GetColor( dis, color_name[i]));
+      printf("%lx\n",GetColor(dis,"yellow")>>8&0xff);
       save_png(canvas);
       return(0);    
     }

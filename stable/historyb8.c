@@ -1,4 +1,5 @@
 #include<stdio.h>
+#include <stdlib.h>
 #include<png.h>
 #include"inc3.h"
 #include <X11/extensions/shape.h>  /* Shape Extension    */
@@ -37,7 +38,7 @@ GC hmask_gc;                        //マスク用グラフィックコンテキスト ID
 
 int bottom,top,next;
 int width,height;
-Display *dis;
+static Display *dis;
 Window win;
 
 void initHistory(Display *display, Window window, int canvas_width, int canvas_height){

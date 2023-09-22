@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 #include "inc3.h"
 #include <X11/extensions/shape.h>  /* Shape Extension    */
 
@@ -35,7 +38,7 @@ void changeLayerName(int num);
 /* 大域変数 */
 /************/
 
-Display *dis;
+static Display *dis;
 
 
 Window layer_menu;                  //レイヤー管理用メニューウィンドウ
@@ -668,7 +671,7 @@ void changeLayerName(int num){
 	if(strlen(layer_name[num])) layer_name[num][strlen(layer_name[num])-1]='\0';
       }else{
 	if( (strlen(layer_name[num]) + strlen(strbuf)) < MAX_NAME){
-	  printf("%d %d %d %s in changeLayerName\n",strlen(layer_name[num]),strlen(strbuf),MAX_NAME,layer_name[num]);
+	  printf("%zu %zu %d %s in changeLayerName\n",strlen(layer_name[num]),strlen(strbuf),MAX_NAME,layer_name[num]);
 	  //文字列の連結
 	  char strpos[MAX_NAME];
 	  strcpy(strpos,layer_name[num]);
